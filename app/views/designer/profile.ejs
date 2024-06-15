@@ -1,0 +1,159 @@
+<%- include('../includes/head.ejs', {title: 'Profile'}) %>
+
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="/css/profile.css">
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<style>
+    .back-arrow
+    {
+        position: absolute;
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        float: left;
+        left: 0;
+        top: 0; 
+    }
+    .back-arrow:hover
+    {
+        cursor: pointer;
+    }
+</style>
+</head>
+<% if (successMessage) { %>
+    <div class="user-message user-message--success" onClick="this.style.visibility='hidden';"><%= successMessage %></div>
+    <% } %>
+
+    <main>
+        <span id="back-arrow" class="back-arrow">
+        
+        <img onClick="history.back()" src="/images/arrow-left.png">
+        </span>
+        <div class="container emp-profile">
+            <div >
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="profile-img">
+                            <img src="<%=designer.imageUrl%>"
+                                alt="" />
+                            <% if (isProfileDesigner) { %>
+                                
+                            <div class="file btn btn-lg btn-primary">
+                                <div>Change Photo</div>
+                                <form id="change" method="post" action="/change-profile-picture" enctype="multipart/form-data">
+                                    <input type="file" name="image" id="image" onchange="this.form.submit()" />
+                            </form>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="profile-head">
+                            <h5>
+                                <%= designer.username %>
+                            </h5>
+                            <h6>
+                                <%= designer.description %>
+                            </h6>
+                            
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="about-tab" data-toggle="tab" href="#home" role="tab"
+                                        aria-controls="home" aria-selected="true">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="designs-tab" data-toggle="tab" href="#profile" role="tab"
+                                        aria-controls="profile" aria-selected="false">Designs</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <% if (isProfileDesigner) { %>
+                    <div class="col-md-2">
+                        <a href="/profile-edit/<%=designer.username%>">
+                        <input type="button" class="profile-edit-btn" name="btnAddMore" value="Edit Profile" />
+                        </a>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="row" id="about-section">
+                    
+                    <div class="col-md-8">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="homee" role="tabpanel" aria-labelledby="home-tab">
+                               
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Username</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><%=designer.username%></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Description</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><%=designer.description%></p>
+                                    </div>
+                                </div>
+                               
+                               
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div id="designs-section" style="display: none;">
+                    <% if (designs.length > 0) { %>
+
+                        <h1 style="text-align: center;"><%=designer.username%>'s Designs</h1>
+                        <div style="position:relative;width: 1000px; height: 500px; ;overflow-wrap: anywhere; overflow-y: scroll;"> 
+                        <% designs.forEach(design => { %>
+                        
+                        <a style="width: 200px; height: 200px; float: left; margin-right: 20px; margin-bottom: 20px;" href="/item/<%=design._id%>">
+                            <img src="<%= design.imageUrl%>" alt="Design!!!">
+                            
+                        </a>    
+                        <% }) %>
+                        
+                        <% } else { %>
+                            <h1 style="text-align: center;">No Designs Yet!</h1>
+                        <% } %>
+                </div>
+            
+        </div>
+
+        <script>
+            document.getElementById("myTab").addEventListener("click", (e) =>{
+                
+                var aboutTab = document.getElementById("about-tab");
+                var designsTab = document.getElementById("designs-tab");
+                if (e.target.id == "designs-tab")
+                {
+                    aboutTab.ariaSelected = false;
+                    designsTab.ariaSelected = true;
+               document.getElementById("about-section").style.display = "none"; 
+               document.getElementById("designs-section").style.display="inline";
+                }
+                else
+                {
+                    aboutTab.ariaSelected = true;
+                    designsTab.ariaSelected = false;
+                    document.getElementById("about-section").style.display = "inline";
+                    document.getElementById("designs-section").style.display = "none";
+                }
+            });
+          
+
+        </script>
+    </main>
+    <%- include('../includes/footer.ejs') %>
+
